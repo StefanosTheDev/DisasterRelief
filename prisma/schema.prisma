@@ -8,7 +8,6 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 // 1. Define an Enum for User Role
 enum Role {
   USER
@@ -17,44 +16,50 @@ enum Role {
 
 // 2. Users Table
 model User {
-  id         String    @id @default(uuid())
+  id         String         @id @default(uuid())
   name       String
-  email      String    @unique
+  email      String         @unique
   password   String
-  role       Role      @default(USER)
-  createdAt  DateTime  @default(now())
+  role       Role           @default(USER)
+  createdAt  DateTime       @default(now())
 
-  // Relation to Donations
+  // Relation to Donations (i.e., donations this user has made)
   donations  Donation[]
+
+  // Relation to Campaign (i.e., campaigns this user has created)
+  campaigns  Campaign[]
 }
 
-// 3. Donations Table
-model Donation {
-  id         String   @id @default(uuid())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  amount     Decimal?
-  message    String?
-  createdAt  DateTime @default(now())
-}
-
-// 4. Relief Efforts Table
-model ReliefEffort {
+// 3. Campaign Efforts Table (i.e., a "campaign" or "cause")
+model Campaign {
   id            String          @id @default(uuid())
   name          String
   description   String
   mediaUrl      String
   createdAt     DateTime        @default(now())
 
-  // Relation to Impact Reports
-  impactReports ImpactReport[]
+  // The user who created this campaign
+  user          User            @relation(fields: [userId], references: [id])
+  userId        String
+
+  // Relation to donations for this specific campaign
+  donations     Donation[]
+
 }
 
-// 5. Impact Reports Table
-model ImpactReport {
-  id         String       @id @default(uuid())
-  effort     ReliefEffort @relation(fields: [effortId], references: [id])
+// 4. Donations Table
+model Donation {
+  id         String        @id @default(uuid())
+  amount     Decimal?
+  message    String?
+  createdAt  DateTime      @default(now())
+
+  // The user who donated
+  donor      User          @relation(fields: [donorId], references: [id])
+  donorId    String
+
+  // The campaign/cause that received this donation
+  cause      Campaign  @relation(fields: [effortId], references: [id])
   effortId   String
-  content    String
-  createdAt  DateTime     @default(now())
 }
+
