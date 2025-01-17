@@ -19,3 +19,13 @@ export const authSchema = z
       .optional(), // Make role optional
   })
   .strict({ message: 'There is an Invalid Field in The Request Body' });
+
+export const loginSchema = z
+  .object({
+    email: z.string({ required_error: 'Password Required' }),
+    password: z
+      .string({ required_error: 'Password Required' })
+      .min(6, { message: 'Password minimum must be 6' })
+      .max(12, { message: 'Password maximum must be 12' }),
+  })
+  .strict({ message: 'There is an Invalid Field in The Request Body' });

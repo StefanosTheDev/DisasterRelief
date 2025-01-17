@@ -5,6 +5,11 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    // Telling TS to look in ./types for custom .d.ts files:
+    "typeRoots": ["./node_modules/@types", "./types"]
   }
+  // If you prefer "include":
+  // "include": ["types", "server.ts"],
+  // "exclude": ["node_modules", "dist"]
 }
