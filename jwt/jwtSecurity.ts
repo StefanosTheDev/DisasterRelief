@@ -6,7 +6,7 @@ import { Request, Response, NextFunction } from 'express';
 import AppError from '../error/AppError';
 import prisma from '../prisma/prismaClient';
 import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/config';
-
+import { isBlacklisted } from './tokenBlacklist';
 // 1. Sign token (remains async because the rest of your flow is likely async)
 export async function signToken(userId: string) {
   return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
@@ -24,6 +24,14 @@ export async function protect(req: Request, res: Response, next: NextFunction) {
     }
 
     const token = req.headers.authorization.split(' ')[1]; // after "Bearer"
+
+    // 2. Check if the token is blacklisted
+    if (isBlacklisted(token)) {
+      throw new AppError(
+        'Token has been invalidated. Please log in again.',
+        401
+      );
+    }
 
     // 2b. Verify token synchronously
     //    - If invalid, it will throw an error that we catch below.
@@ -48,5 +56,3 @@ export async function protect(req: Request, res: Response, next: NextFunction) {
     return next(error);
   }
 }
-
-//In your authentication or “protect” middleware, replace Request with AuthRequest. Then you can safely assign req.user:
