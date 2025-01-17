@@ -1,6 +1,6 @@
 const { z } = require('zod');
 import { Prisma, Role } from '@prisma/client';
-const authSchema = z
+export const authSchema = z
   .object({
     username: z
       .string({ required_error: 'Username Is Required' })
