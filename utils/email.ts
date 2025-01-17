@@ -1,41 +1,28 @@
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
+
 import dotenv from 'dotenv';
 
-dotenv.config(); // Load environment variables from .env
+dotenv.config();
 
-// Configure Nodemailer
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587', 10), // Gmail SMTP port
-  secure: false, // Use TLS
-  auth: {
-    user: process.env.SMTP_USER, // Gmail address
-    pass: process.env.SMTP_PASS, // App Password
-  },
-});
+sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+// Define the email message
+const msg: sgMail.MailDataRequired = {
+  to: 'stefanos@clearstack.ai', // Replace with recipient's email
+  from: 'no-reply@em9716.clearstack.ai', // Replace with your verified SendGrid sender email
+  subject: 'Sending with SendGrid is Fun',
+  text: 'and easy to do anywhere, even with Node.js',
+  html: '<strong>Stefanos Sophocleous Most Updated Email</strong>',
+};
 
-/**
- * Send an email.
- * @param to Recipient's email address.
- * @param subject Email subject.
- * @param text Email body text.
- */
-export async function sendEmail(
-  to: string,
-  subject: string,
-  text: string
-): Promise<void> {
-  try {
-    const info = await transporter.sendMail({
-      from: `"Your App Name" <${process.env.SMTP_USER}>`, // Sender address
-      to, // Recipient
-      subject, // Subject
-      text, // Email body
-    });
-
-    console.log(`Email sent: ${info.messageId}`);
-  } catch (error) {
-    console.error('Failed to send email:', error);
-    throw error;
-  }
-}
+// Send the email
+sgMail
+  .send(msg)
+  .then(() => {
+    console.log('Email sent');
+  })
+  .catch((error) => {
+    console.error(
+      'Error sending email:',
+      error.response ? error.response.body : error.message
+    );
+  });
