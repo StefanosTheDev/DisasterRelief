@@ -28,3 +28,17 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     next(error);
   }
 }
+
+export async function logout(req: Request, res: Response, next: NextFunction) {}
+
+export async function resetPassword(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {}
+
+export async function resetEmail(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {}
