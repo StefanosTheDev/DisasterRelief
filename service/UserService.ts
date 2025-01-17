@@ -1,7 +1,4 @@
-// ✅ New ES module import
-import { PrismaClient, Role } from '@prisma/client';
-const prisma = new PrismaClient();
-
+import prisma, { Role } from '../prisma/prismaClient';
 // why do we have it as static this the best way to write this?
 export async function registerUser({
   name,
