@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 // Define the email message
 const msg: sgMail.MailDataRequired = {
   to: 'stefanos@clearstack.ai', // Replace with recipient's email
