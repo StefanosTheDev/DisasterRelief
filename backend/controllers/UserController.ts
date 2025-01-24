@@ -3,15 +3,13 @@ import {
   registerUser,
   loginUser,
   forgotUsername,
-  forgotPassword,
-  resetPassword,
+  getUsers,
 } from '../service/UserService';
 import { logoutUser } from '../service/UserService';
 
 export async function signup(req: Request, res: Response, next: NextFunction) {
   try {
     const newUser = await registerUser(req.body);
-
     res.status(201).json({
       message: 'User created successfully',
       data: newUser,
@@ -62,30 +60,37 @@ export async function forgotUsernameController(
   }
 }
 
-export async function forgotPasswordController(
+export async function getAllUsers(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const { email } = req.body;
-    await forgotPassword(email);
-    res.status(200).json({ message: 'Password reset email sent.' });
+    const users = await getUsers();
+    res.status(200).json({
+      message: 'All Users',
+      data: users,
+    });
   } catch (error) {
     next(error);
   }
 }
 
-export async function resetPasswordController(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const { token, newPassword } = req.body;
-    await resetPassword(token, newPassword);
-    res.status(200).json({ message: 'Password has been reset successfully.' });
-  } catch (error) {
-    next(error);
-  }
-}
+// export async function searchByID(
+//   req: Request<{ id: string }>,
+//   res: Response,
+//   next: NextFunction
+// ) {
+//   try {
+//     const getUserByID = await searchUserByID(req.params);
+
+//     res.status(200).json({
+//       message: 'Item found.',
+//       data: {
+//         getUserByID,
+//       },
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// }

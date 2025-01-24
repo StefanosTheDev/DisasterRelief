@@ -25,14 +25,6 @@ export async function protect(req: Request, res: Response, next: NextFunction) {
 
     const token = req.headers.authorization.split(' ')[1]; // after "Bearer"
 
-    // 2. Check if the token is blacklisted
-    if (isBlacklisted(token)) {
-      throw new AppError(
-        'Token has been invalidated. Please log in again.',
-        401
-      );
-    }
-
     // 2b. Verify token synchronously
     //    - If invalid, it will throw an error that we catch below.
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -49,7 +41,7 @@ export async function protect(req: Request, res: Response, next: NextFunction) {
     if (!currentUser) {
       return next(new AppError('No user found with this token.', 401));
     }
-    req.user = currentUser;
+    req.user = currentUser; // aREview the notion doc i made. 
     return next();
   } catch (error) {
     // Any errors from jwt.verify or DB calls will end up here
