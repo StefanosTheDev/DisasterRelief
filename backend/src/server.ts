@@ -1,5 +1,3 @@
-// const dotenv = require('dotenv');
-// dotenv.config({ path: './config.env' }); // Load environment variables
 import app from './app';
 
 const port = process.env.PORT || 3000;
