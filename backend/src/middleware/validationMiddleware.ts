@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ZodSchema } from 'zod';
-import AppError from '../error/AppError';
+import AppError from '../error/appError';
 import { Request, Response, NextFunction } from 'express';
 
 export function validate<T>(schema: ZodSchema<T>) {

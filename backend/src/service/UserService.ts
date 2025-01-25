@@ -1,4 +1,4 @@
-import AppError from '../error/AppError';
+import AppError from '../error/appError';
 import prisma from '../prisma/prismaClient';
 import bcrypt from 'bcrypt';
 import { signToken } from '../jwt/jwtSecurity';

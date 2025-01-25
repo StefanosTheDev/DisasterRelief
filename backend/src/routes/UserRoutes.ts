@@ -6,7 +6,7 @@ import {
   forgotUsernameController,
   getAllUsers,
 } from '../controllers/UserController';
-import { authSchema, loginSchema } from '../zodSchemas/auth_schema';
+import { authSchema, loginSchema } from '../zodSchemas/authSchema';
 import { validate } from '../middleware/validationMiddleware';
 import {
   globalLimiter,

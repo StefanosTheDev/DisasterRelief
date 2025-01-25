@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
-import AppError from '../error/AppError';
+import AppError from '../error/appError';
 
 dotenv.config({ path: './config.env' }); // Load environment variables
 

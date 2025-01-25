@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import fs from 'fs';
-import AppError from '../error/AppError';
+import AppError from '../error/appError';
 
 /**
  * Handles errors in development mode by sending detailed error responses.
