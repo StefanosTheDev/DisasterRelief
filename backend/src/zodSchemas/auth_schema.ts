@@ -1,5 +1,5 @@
 const { z } = require('zod');
-
+import { validateEmail } from '../utils/util';
 export const authSchema = z
   .object({
     name: z
@@ -12,7 +12,13 @@ export const authSchema = z
       .min(6, { message: 'Password minimum must be 6' })
       .max(12, { message: 'Password maximum must be 12' }),
 
-    email: z.string({ required_error: 'Password Required' }),
+    email: z
+      .string({ required_error: 'Email Required' })
+      .email({ message: 'Invalid email format' })
+      .refine(async (email: string) => {
+        console.log('Refine function called', email);
+        return await validateEmail(email);
+      }),
   })
   .strict({ message: 'There is an Invalid Field in The Request Body' });
 

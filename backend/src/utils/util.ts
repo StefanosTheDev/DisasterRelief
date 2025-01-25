@@ -10,7 +10,7 @@ dotenv.config({ path: './config.env' }); // Load environment variables
  * @returns A promise that resolves to true if the email is valid, otherwise throws an error.
  */
 
-export const validateEmail = async (email: string): Promise<boolean> => {
+export const validateEmail = async (email: string) => {
   const apiKey = process.env.HUNTER_KEY;
   if (!apiKey) {
     throw new AppError('Cannot Read Hunter API Key', 400);
