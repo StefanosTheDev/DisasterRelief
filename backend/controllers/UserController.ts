@@ -13,7 +13,7 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
     res.status(201).json({
       message: 'User created successfully',
       data: newUser,
-    }); // No explicit `return`
+    });
   } catch (error) {
     next(error); // Pass the error to Express error handling middleware
   }
