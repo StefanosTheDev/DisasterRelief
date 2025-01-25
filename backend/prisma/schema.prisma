@@ -8,11 +8,7 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-// 1. Define an Enum for User Role
-enum Role {
-  USER
-  ADMIN
-}
+
 
 // 2. Users Table
 model User {
@@ -20,7 +16,6 @@ model User {
   name       String         
   email      String         @unique
   password   String
-  role       Role           @default(USER)
   createdAt  DateTime       @default(now())
 
 

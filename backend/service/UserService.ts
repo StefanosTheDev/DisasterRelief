@@ -1,5 +1,5 @@
 import AppError from '../error/AppError';
-import prisma, { Role } from '../prisma/prismaClient';
+import prisma from '../prisma/prismaClient';
 import bcrypt from 'bcrypt';
 import { signToken } from '../jwt/jwtSecurity';
 import jwt from 'jsonwebtoken';
@@ -11,12 +11,10 @@ export async function registerUser({
   name,
   email,
   password,
-  role,
 }: {
   name: string;
   email: string;
   password: string;
-  role: Role; // from your Zod schema or enum
 }) {
   // 1. Hash the password before storing
   //    The second argument "saltRounds" is how many rounds of salt to apply. 10-12 is common.
@@ -28,7 +26,6 @@ export async function registerUser({
       name,
       email,
       password: hashedPassword,
-      role,
     },
   });
 

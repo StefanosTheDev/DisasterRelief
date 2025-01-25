@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: disaster-relief-app
+    build:
+      context: .
+      dockerfile: build.dockerfile
+    ports:
+      - '3000:3000' # Expose app on localhost:3000
+    environment:
+      DATABASE_URL: 'postgresql://app_user:app_password@postgres:5432/app_db?schema=public'
+      JWT_SECRET: 'my-ultra-secure-and-ultra-long-secret' # Replace with your real secret
+    depends_on:
+      - postgres # Wait for PostgreSQL to start
+    networks:
+      - app-network
+    volumes:
+      - ./wait-for-postgres.sh:/wait-for-postgres.sh # Mount the wait script
+
+  postgres:
+    image: postgres:14
+    container_name: disaster-relief-db
+    restart: always
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
+      POSTGRES_DB: app_db
+    ports:
+      - '5432:5432' # Expose database on localhost:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+volumes:
+  postgres-data: # Define a named volume for PostgreSQL data persistence
+
+networks:
+  app-network: # Define a network for communication between services

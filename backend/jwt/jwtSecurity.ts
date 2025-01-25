@@ -2,18 +2,21 @@
 
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-
+import { UserRequest } from '../types/index';
 import AppError from '../error/AppError';
 import prisma from '../prisma/prismaClient';
 import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/config';
-import { isBlacklisted } from './tokenBlacklist';
 // 1. Sign token (remains async because the rest of your flow is likely async)
 export async function signToken(userId: string) {
   return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
 
 // 2. Protect middleware
-export async function protect(req: Request, res: Response, next: NextFunction) {
+export async function protect(
+  req: UserRequest,
+  res: Response,
+  next: NextFunction
+) {
   try {
     // 2a. Get token from Authorization header
     if (
@@ -41,7 +44,7 @@ export async function protect(req: Request, res: Response, next: NextFunction) {
     if (!currentUser) {
       return next(new AppError('No user found with this token.', 401));
     }
-    req.user = currentUser; // aREview the notion doc i made. 
+    req.user = currentUser; // REview the notion doc i made.
     return next();
   } catch (error) {
     // Any errors from jwt.verify or DB calls will end up here
