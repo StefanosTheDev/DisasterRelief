@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { _createCampaign } from '../service/DonationService';
+import { Response, NextFunction } from 'express';
+import { createCampaignRecord } from '../service/donationService';
 import { UserRequest } from '../types/index';
 
 export async function createCampaign(
@@ -8,7 +8,7 @@ export async function createCampaign(
   next: NextFunction
 ) {
   try {
-    const campaign = await _createCampaign({
+    const campaign = await createCampaignRecord({
       userId: req.user?.id,
       ...req.body,
     });

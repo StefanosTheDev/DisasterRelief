@@ -6,6 +6,7 @@ import { UserRequest } from '../types/index';
 import AppError from '../error/appError';
 import prisma from '../prisma/prismaClient';
 import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/config';
+
 // 1. Sign token (remains async because the rest of your flow is likely async)
 export async function signToken(userId: string) {
   return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });

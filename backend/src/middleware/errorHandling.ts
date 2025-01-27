@@ -28,20 +28,6 @@ const sendErrorProd = (err: AppError, res: Response): void => {
       status: err.status,
       message: err.message,
     });
-  } else {
-    // Log error to file in production
-    const errorLog = `Time: ${new Date().toISOString()}\nError: ${
-      err.message
-    }\nStatus: ${err.statusCode || 500}\nStack: ${err.stack}\n\n`;
-
-    try {
-      fs.appendFileSync(
-        '/Users/stefanossophocleous/Desktop/CEO Developers/CEO-Developers/backend/logs/prod_errors.log',
-        errorLog
-      );
-    } catch (loggingError) {
-      console.error('Failed to write to log file', loggingError);
-    }
 
     res.status(500).json({
       status: 'error',

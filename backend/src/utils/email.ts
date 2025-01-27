@@ -1,5 +1,5 @@
 import sgMail from '@sendgrid/mail';
-import AppError from '../error/appError';
+import AppError from '../error/AppError';
 import dotenv from 'dotenv';
 
 dotenv.config();

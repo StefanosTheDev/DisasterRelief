@@ -10,6 +10,12 @@ dotenv.config({ path: './config.env' }); // Load environment variables
  * @returns A promise that resolves to true if the email is valid, otherwise throws an error.
  */
 
+// This method does 2 things.
+// Hits the API makes sure its a valid email.
+// Check the Database to makes ure its unique.
+// If SO it's a valid email.
+// if not throw that error.
+
 export const validateEmail = async (email: string) => {
   const apiKey = process.env.HUNTER_KEY;
   if (!apiKey) {

@@ -1,5 +1,5 @@
 import express from 'express';
-import userRoutes from './routes/UserRoutes';
+import userRoutes from './routes/authRoute';
 import { globalErrorHandler } from './middleware/errorHandling';
 import morgan from 'morgan';
 import helmet from 'helmet';
@@ -10,6 +10,7 @@ import { Request, Response, NextFunction } from 'express';
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
 app.use(helmet());
 
 app.use(express.json());
