@@ -4,6 +4,7 @@ import {
   getUserRecords,
   updateUserRecordByID,
   deleteUserRecordByID,
+  getUserRecordByID,
 } from '../service/userService';
 
 /**
@@ -43,13 +44,24 @@ export async function updateUserByID(
 }
 
 export async function getUserByID(
-  req: UserRequest,
+  req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
-) {}
+) {
+  try {
+    const user = await getUserRecordByID(req.params);
+    console.log('User Found In Controller', user);
+    res.status(200).json({
+      status: 'User Found',
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 
 export async function deleteUserByID(
-  req: Request,
+  req: Request<{ id: string }>, // Explicitly Type Req.params
   res: Response,
   next: NextFunction
 ) {
@@ -57,6 +69,7 @@ export async function deleteUserByID(
     const delUser = await deleteUserRecordByID(req.params);
     res.status(200).json({
       status: 'User Deleted',
+      data: delUser,
     });
   } catch (error) {
     next(error);

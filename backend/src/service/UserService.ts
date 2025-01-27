@@ -9,6 +9,9 @@ export async function getUserRecords() {
   return users;
 }
 
+// Okay so what are the principles of a good update.
+// First point of contact: Controller -> Zod Schema  (Validate Data) -> Service Level.
+// Okay now
 export async function updateUserRecordByID({
   id,
   name,
@@ -34,12 +37,21 @@ export async function updateUserRecordByID({
   return updateUser;
 }
 
-export async function getUserRecordByID() {}
-
-export async function deleteUserRecordByID({ id }) {
-  const deleteUser = await prisma.user.delete({
+export async function getUserRecordByID({ id }: { id: string }) {
+  const user = await prisma.user.findUnique({
     where: {
-      id: id,
+      id,
     },
   });
+  console.log(user);
+  return user;
+}
+
+export async function deleteUserRecordByID({ id }: { id: string }) {
+  const deleteUser = await prisma.user.delete({
+    where: {
+      id,
+    },
+  });
+  return deleteUser;
 }
