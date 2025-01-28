@@ -2,16 +2,17 @@ import AppError from '../error/appError';
 import prisma from '../prisma/prismaClient';
 
 export async function getUserRecords() {
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    include: {
+      campaigns: true, // Includes the related campaigns in the user data.
+    },
+  });
   if (!users) {
     throw new AppError('No Users Found', 400);
   }
   return users;
 }
 
-// Okay so what are the principles of a good update.
-// First point of contact: Controller -> Zod Schema  (Validate Data) -> Service Level.
-// Okay now
 export async function updateUserRecordByID({
   id,
   name,

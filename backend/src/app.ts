@@ -3,7 +3,7 @@ import authRoutes from './routes/authRoute';
 import { globalErrorHandler } from './middleware/errorHandling';
 import morgan from 'morgan';
 import helmet from 'helmet';
-import donationRoutes from './routes/donationRoute';
+import campaignRoutes from './routes/campaignRoute';
 import userRoutes from './routes/userRoute';
 const app = express();
 import { Request, Response, NextFunction } from 'express';
@@ -21,7 +21,7 @@ app.get('/', (req: Request, res: Response) => {
 
 // Routes Import:
 app.use('/auth', authRoutes);
-app.use('/campaign', donationRoutes);
+app.use('/campaign', campaignRoutes);
 app.use('/users', userRoutes);
 
 app.use(globalErrorHandler);

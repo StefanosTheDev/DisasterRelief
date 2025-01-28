@@ -1,5 +1,5 @@
 import express from 'express';
-import { createCampaign } from '../controllers/donationController';
+import { createCampaign } from '../controllers/campaignController';
 import { protect } from '../jwt/jwtSecurity';
 const router = express.Router();
 
