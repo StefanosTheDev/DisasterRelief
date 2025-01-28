@@ -47,9 +47,12 @@ export async function deleteCampaignByID(
   next: NextFunction
 ) {
   try {
+    // Understand why this didnt work they i wanted with spread.
+    const { id } = req.params;
+
     const delCampaign = await deleteCampaignRecordByID({
-      userId: req.user?.id,
-      ...req.params,
+      userId: req.user?.id as string,
+      id,
     });
     res.status(200).json({
       message: 'Campaign Delete',

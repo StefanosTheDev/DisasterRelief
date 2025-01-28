@@ -29,11 +29,11 @@ export async function getAllCampaignRecords() {
 }
 
 export async function deleteCampaignRecordByID({
-  id,
   userId,
+  id,
 }: {
-  id: string;
   userId: string;
+  id: string;
 }) {
   // Make sure that campaign still exists with the user
   const campaign = await prisma.campaign.findUnique({ where: { id } });
@@ -44,6 +44,8 @@ export async function deleteCampaignRecordByID({
   if (campaign.userId !== userId) {
     throw new AppError('You do not own this campaign', 400);
   }
+
+  // Delete The Campaign
 
   const delCampaign = await prisma.campaign.delete({
     where: {
