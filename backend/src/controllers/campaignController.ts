@@ -48,11 +48,12 @@ export async function deleteCampaignByID(
 ) {
   try {
     // Understand why this didnt work they i wanted with spread.
-    const { id } = req.params;
+    // TypeScript infers the type of req.user.id to be string | undefined
+    if (!req.user?.id) throw new Error('Could not find user.id on the request');
 
     const delCampaign = await deleteCampaignRecordByID({
-      userId: req.user?.id as string,
-      id,
+      userId: req.user.id,
+      id: req.params.id,
     });
     res.status(200).json({
       message: 'Campaign Delete',
