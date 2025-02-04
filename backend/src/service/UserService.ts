@@ -1,16 +1,29 @@
 import AppError from '../error/appError';
 import prisma from '../prisma/prismaClient';
+import { parsePrismaError } from '../error/prismaError';
 
 export async function getUserRecords() {
-  const users = await prisma.user.findMany({
-    include: {
-      campaigns: true, // Includes the related campaigns in the user data.
-    },
-  });
-  if (!users) {
-    throw new AppError('No Users Found', 400);
+  try {
+    const users = await prisma.user.findMany({
+      include: {
+        campaigns: true, // Includes the related campaigns in the user data.
+      },
+    });
+    if (!users) {
+      throw new AppError('No Users Found', 400);
+    }
+    return users;
+  } catch (error) {
+    throw parsePrismaError({
+      error,
+      codes: {
+        P2016: new AppError('Invalid query or database issue occurred', 500),
+        P2025: new AppError('Record not found during query execution', 404),
+
+        default: new AppError('Database error occurred', 500),
+      },
+    });
   }
-  return users;
 }
 
 export async function updateUserRecordByID({

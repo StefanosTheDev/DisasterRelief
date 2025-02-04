@@ -38,7 +38,7 @@ export const validateEmail = async (email: string) => {
       };
     };
 
-    if (data.data.status !== 'valid') {
+    if (data.data.status !== 'accept_all') {
       throw new AppError('Email is Invalid From API', 400);
     }
 

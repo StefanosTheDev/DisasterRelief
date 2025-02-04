@@ -1,32 +1,45 @@
-const { z } = require('zod');
+// If you are using ES modules, use the following import style:
+import { z } from 'zod';
 import { validateEmail } from '../utils/util';
+
+// If you are using CommonJS, you might instead use:
+// const { z } = require('zod');
+// const { validateEmail } = require('../utils/util');
+
 export const authSchema = z
   .object({
     name: z
-      .string({ required_error: 'Username Is Required' })
-      .min(6, { message: 'Username minimum must be 6' })
-      .max(12, { message: 'Username maximum must be 12' }),
+      .string({ required_error: 'Username is required' })
+      .min(6, { message: 'Username must be at least 6 characters' })
+      .max(12, { message: 'Username must be at most 12 characters' }),
 
     password: z
-      .string({ required_error: 'Password Required' })
-      .min(6, { message: 'Password minimum must be 6' })
-      .max(12, { message: 'Password maximum must be 12' }),
+      .string({ required_error: 'Password is required' })
+      .min(6, { message: 'Password must be at least 6 characters' })
+      .max(12, { message: 'Password must be at most 12 characters' }),
 
-    email: z.string({ required_error: 'Email Required' }),
-    // .email({ message: 'Invalid email format' })
-    // .refine(async (email: string) => {
-    //   console.log('Refine function called', email);
-    //   return await validateEmail(email);
-    // }),
+    email: z
+      .string({ required_error: 'Email is required' })
+      .email({ message: 'Invalid email format' }),
+    // The asynchronous refine will only run if the email passes the built‑in .email() check.
+    // .refine(
+    //   async (email: string) => {
+    //     console.log('Async refine function called with:', email);
+    //     return await validateEmail(email);
+    //   },
+    //   { message: 'Email is not valid or does not exist' }
+    // ),
   })
-  .strict({ message: 'There is an Invalid Field in The Request Body' });
+  .strict({ message: 'There is an invalid field in the request body' });
 
 export const loginSchema = z
   .object({
-    email: z.string({ required_error: 'Password Required' }),
+    email: z
+      .string({ required_error: 'Email is required' })
+      .email({ message: 'Invalid email format' }), // Optionally add .email() check for login as well.
     password: z
-      .string({ required_error: 'Password Required' })
-      .min(6, { message: 'Password minimum must be 6' })
-      .max(12, { message: 'Password maximum must be 12' }),
+      .string({ required_error: 'Password is required' })
+      .min(6, { message: 'Password must be at least 6 characters' })
+      .max(12, { message: 'Password must be at most 12 characters' }),
   })
-  .strict({ message: 'There is an Invalid Field in The Request Body' });
+  .strict({ message: 'There is an invalid field in the request body' });

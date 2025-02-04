@@ -2,7 +2,6 @@ import AppError from '../error/appError';
 import prisma from '../prisma/prismaClient';
 import bcrypt from 'bcrypt';
 import { signToken } from '../jwt/jwtSecurity';
-import { Prisma } from '@prisma/client';
 import { parsePrismaError } from '../error/prismaError';
 
 export async function createUserRecord({
@@ -33,7 +32,7 @@ export async function createUserRecord({
       error,
       codes: {
         // unique constraint failed
-        P2002: new AppError('A  user with that email address exists', 400),
+        P2002: new AppError('A user with that email address exists', 400),
       },
     });
   }
@@ -46,25 +45,30 @@ export async function validateUserRecord({
   email: string;
   password: string;
 }) {
-  // 1. Find the user by email
-  const user = await prisma.user.findUnique({
-    where: { email },
-  });
+  try {
+    // 1. Find the user by email
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
 
-  // 2. If no user found, return early (or throw an error)
-  if (!user) {
-    throw new AppError('User does not exist', 400);
+    // 2. If no user found, return early (or throw an error)
+    if (!user) {
+      throw new AppError('User does not exist', 400);
+    }
+
+    // 3. Compare the provided plaintext password to the stored hashed password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      throw new AppError('Password is incorrect', 400);
+    }
+
+    const token = await signToken(user.id);
+    return { user, token };
+  } catch (error) {
+    throw parsePrismaError({
+      error,
+      codes: {},
+    });
   }
-
-  // 3. Compare the provided plaintext password to the stored hashed password
-  const isPasswordValid = await bcrypt.compare(password, user.password);
-
-  if (!isPasswordValid) {
-    throw new AppError('Password is incorrect', 400);
-  }
-
-  const token = await signToken(user.id);
-  console.log(token);
-  // 4. If valid, return the user (or proceed with generating a JWT, session, etc.)
-  return { user, token };
 }
