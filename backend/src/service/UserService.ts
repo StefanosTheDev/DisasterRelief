@@ -3,13 +3,8 @@ import prisma from '../prisma/prismaClient';
 import { parsePrismaError } from '../error/prismaError';
 import bcrypt from 'bcrypt';
 
-// wait i can make this an active or passive getUserRecords utility function
 export async function getUserRecords() {
   try {
-    // What I am trying to say is
-    // if Type is === to active return sinc ehte default is false.
-    // if type is === deleted
-
     const users = await prisma.user.findMany({
       where: {
         isDeleted: false,
@@ -34,11 +29,11 @@ export async function getUserRecords() {
     });
   }
 }
-export async function getUserRecordByID({ id }: { id: string }) {
+export async function getUserRecordByID({ userId }: { userId: string }) {
   try {
     const user = await prisma.user.findUnique({
       where: {
-        id,
+        id: userId,
         isDeleted: false,
       },
     });
@@ -51,8 +46,46 @@ export async function getUserRecordByID({ id }: { id: string }) {
       error,
       codes: {
         P2016: new AppError('Invalid query or database issue occurred', 500),
-
         default: new AppError('Database error occurred', 500),
+      },
+    });
+  }
+}
+// NEED TO REVIEW THESE AND FINALIZE DELETION FLOW & Update User
+export async function softDeleteUserRecord({ userId }: { userId: string }) {
+  try {
+    await prisma.campaign.updateMany({
+      where: { userId, isDeleted: false },
+      data: {
+        isDeleted: true,
+        deletedAt: new Date(),
+      },
+    });
+
+    // Step 2) Soft-delete the user
+    const user = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        isDeleted: true,
+        deletedAt: new Date(),
+      },
+    });
+
+    if (!user) {
+      throw new AppError('User not found or already deleted', 400);
+    }
+    return user;
+  } catch (error) {
+    parsePrismaError({
+      error,
+      codes: {
+        P2003: new AppError('Record being deleted has dependent records.', 400),
+        default: new AppError(
+          'An error occurred while deleting the user. ',
+          500
+        ),
       },
     });
   }
@@ -94,46 +127,6 @@ export async function updateUserRecordByID({
         P2002: new AppError('A user with this email already exists.', 400),
         default: new AppError(
           'Something went wrong while updating the user.',
-          500
-        ),
-      },
-    });
-  }
-}
-export async function softDeleteUserRecord({ userId }: { userId: string }) {
-  try {
-    // Step 1) Soft Delete Related Campaigns
-    // What happends if it just has no campaigns?
-    await prisma.campaign.updateMany({
-      where: { userId, isDeleted: false },
-      data: {
-        isDeleted: true,
-        deletedAt: new Date(),
-      },
-    });
-
-    // Step 2) Soft-delete the user
-    const user = await prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        isDeleted: true,
-        deletedAt: new Date(),
-      },
-    });
-
-    if (!user) {
-      throw new AppError('User not found or already deleted', 400);
-    }
-    return user;
-  } catch (error) {
-    parsePrismaError({
-      error,
-      codes: {
-        P2003: new AppError('Record being deleted has dependent records.', 400),
-        default: new AppError(
-          'An error occurred while deleting the user. ',
           500
         ),
       },

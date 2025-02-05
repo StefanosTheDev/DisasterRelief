@@ -44,12 +44,16 @@ export async function updateUserByID(
 }
 
 export async function getUserByID(
-  req: Request<{ id: string }>,
+  req: UserRequest,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const user = await getUserRecordByID(req.params);
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new AppError('Could not find user.id on the request', 400);
+    }
+    const user = await getUserRecordByID({ userId });
     console.log('User Found In Controller', user);
     res.status(200).json({
       status: 'User Found',

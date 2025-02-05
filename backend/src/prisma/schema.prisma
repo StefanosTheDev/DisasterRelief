@@ -20,7 +20,7 @@ model User {
 
   donations  Donation[]
   campaigns  Campaign[]
-
+  
   deletionLogs    DeletionLog[]  // One-to-many relationship with the centralized log table
   isDeleted  Boolean   @default(false)
   deletedAt  DateTime?  // Store only the last deletion event for quick checks
@@ -40,8 +40,8 @@ model Campaign {
   userId        String
 
 
-  isDeleted  Boolean   @default(false)  // Make sure this exists
-  deletedAt  DateTime?
+  isDeleted  Boolean   @default(false)
+
   // Relation to donations for this specific campaign
   donations     Donation[]
 
