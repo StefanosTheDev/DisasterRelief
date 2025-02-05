@@ -28,30 +28,18 @@ export async function getAllCampaignRecords() {
   return allCampaigns;
 }
 
-export async function deleteCampaignRecordByID({
-  userId,
-  id,
-}: {
-  userId: string;
-  id: string;
-}) {
-  // Make sure that campaign still exists with the user
-  const campaign = await prisma.campaign.findUnique({ where: { id } });
-  if (!campaign) {
-    throw new AppError('No Campaign Found', 400);
-  }
-  // Make sure the campaign array, where its stored in the obj. It's user ID is the same as the userID of the logged in user
-  if (campaign.userId !== userId) {
-    throw new AppError('You do not own this campaign', 400);
-  }
+// export async function deleteCampaignRecordByID({ userId }: { userId: string }) {
+//   // Make sure that campaign still exists with the user
+//   const campaign = await prisma.campaign.findUnique({ where: { id: userId } });
+//   if (!campaign) {
+//     throw new AppError('No Campaign Found', 400);
+//   }
+//   // Make sure the campaign array, where its stored in the obj. It's user ID is the same as the userID of the logged in user
+//   if (campaign.userId !== userId) {
+//     throw new AppError('You do not own this campaign', 400);
+//   }
 
-  // Delete The Campaign
+//   // Delete The Campaign
 
-  const delCampaign = await prisma.campaign.delete({
-    where: {
-      id: id,
-    },
-  });
-
-  return delCampaign;
-}
+//   return delCampaign;
+// }

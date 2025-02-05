@@ -2,10 +2,6 @@
 import { z } from 'zod';
 import { validateEmail } from '../utils/util';
 
-// If you are using CommonJS, you might instead use:
-// const { z } = require('zod');
-// const { validateEmail } = require('../utils/util');
-
 export const authSchema = z
   .object({
     name: z

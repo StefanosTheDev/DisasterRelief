@@ -18,3 +18,11 @@ export const userSchema = z.object({
   //   return await validateEmail(email);
   // }),
 });
+export const validateIDSchema = z
+  .object({
+    id: z
+      .string()
+      .uuid('Invalid UUID format for user ID')
+      .nonempty('User ID is required'),
+  })
+  .strict('There is an invalid field in the request Param');

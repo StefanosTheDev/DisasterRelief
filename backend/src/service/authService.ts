@@ -19,6 +19,7 @@ export async function createUserRecord({
 
   try {
     // 2. Create the user in the database with the hashed password
+
     const newUser = await prisma.user.create({
       data: {
         name,
@@ -33,6 +34,10 @@ export async function createUserRecord({
       codes: {
         // unique constraint failed
         P2002: new AppError('A user with that email address exists', 400),
+        default: new AppError(
+          'Something went wrong. Please try again later.',
+          500
+        ),
       },
     });
   }
@@ -46,14 +51,14 @@ export async function validateUserRecord({
   password: string;
 }) {
   try {
-    // 1. Find the user by email
+    // 1. Find the user by email . Make sure your working through active.
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { email, isDeleted: false },
     });
 
-    // 2. If no user found, return early (or throw an error)
+    // Check if User OBJ was found & Make sure its not deleted.
     if (!user) {
-      throw new AppError('User does not exist', 400);
+      throw new AppError('Invalid credentials', 403);
     }
 
     // 3. Compare the provided plaintext password to the stored hashed password
@@ -68,7 +73,14 @@ export async function validateUserRecord({
   } catch (error) {
     throw parsePrismaError({
       error,
-      codes: {},
+      codes: {
+        P2016: new AppError('Invalid query or database configuration', 500),
+        // Catch any unexpected database errors and throw a generic error
+        default: new AppError(
+          'Something went wrong. Please try again later.',
+          500
+        ),
+      },
     });
   }
 }

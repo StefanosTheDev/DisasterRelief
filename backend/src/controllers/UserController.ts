@@ -3,10 +3,10 @@ import { UserRequest } from '../types/index';
 import {
   getUserRecords,
   updateUserRecordByID,
-  deleteUserRecordByID,
+  softDeleteUserRecord,
   getUserRecordByID,
 } from '../service/userService';
-
+import AppError from '../error/appError';
 /**
  * This file is served to only handle operations related to User.
  */
@@ -60,13 +60,19 @@ export async function getUserByID(
   }
 }
 
-export async function deleteUserByID(
-  req: Request<{ id: string }>, // Explicitly Type Req.params
+export async function softDeleteUserByID(
+  req: UserRequest,
+  // Explicitly Type Req.params
   res: Response,
   next: NextFunction
 ) {
   try {
-    const delUser = await deleteUserRecordByID(req.params);
+    // Review and make my case for this.
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new AppError('Could not find user.id on the request', 400);
+    }
+    const delUser = await softDeleteUserRecord({ userId });
     res.status(200).json({
       status: 'User Deleted',
       data: delUser,

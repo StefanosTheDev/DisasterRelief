@@ -1,23 +1,22 @@
 import express from 'express';
 import {
-  deleteUserByID,
+  softDeleteUserByID,
   getUserByID,
   getUsers,
   updateUserByID,
 } from '../controllers/userController';
-import { userSchema } from '../zodSchemas/userSchema';
+import { userSchema, validateIDSchema } from '../zodSchemas/userSchema';
 import { validate } from '../middleware/validationMiddleware';
 import { protect } from '../jwt/jwtSecurity';
-import { authSchema, loginSchema } from '../zodSchemas/authSchema';
 
 const router = express.Router();
 
 // Routes
 router
-  .route('/:id')
+  .route('/')
   .put(protect, validate(userSchema), updateUserByID)
-  .get(getUserByID)
-  .delete(deleteUserByID);
-router.get('/', getUsers);
+  .get(protect, getUserByID)
+  .delete(protect, softDeleteUserByID);
 
+router.get('/users', protect, getUsers);
 export default router;
