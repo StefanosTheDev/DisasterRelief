@@ -51,7 +51,6 @@ export async function getUserRecordByID({ userId }: { userId: string }) {
     });
   }
 }
-
 // NEED TO REVIEW THESE AND FINALIZE DELETION FLOW & Update User
 export async function softDeleteUserRecord({ userId }: { userId: string }) {
   try {
