@@ -18,5 +18,5 @@ router
   .get(protect, getUserByID)
   .delete(protect, softDeleteUserByID);
 
-router.get('/users', protect, getUsers);
+router.get('/users', getUsers);
 export default router;
